@@ -1,0 +1,136 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    padding: 0px;
+    padding-bottom: 1px;
+    margin: 0px;
+    display: grid;
+    min-height: 100%;
+    grid-gap: 2px;
+}
+
+.portrait {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-areas:
+        'title title title title'
+	'input input input input'
+	'_7 _8 _9 settings'
+	'_4 _5 _6 minus'
+	'_1 _2 _3 plus'
+	'backspace _0 D enter'
+	'results results results results'
+	'results results results results'
+	'results results results results'
+	'results results results results';
+}
+
+.landscape {
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-template-areas:
+        'title title title title title title title title'
+	'input input input input results results results results'
+	'_7 _8 _9 settings results results results results'
+	'_4 _5 _6 minus results results results results'
+	'_1 _2 _3 plus results results results results'
+	'backspace _0 D enter results results results results';
+}
+
+.app_item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(0, 0, 0, 1);
+    background-color: #e0e0ff;
+    border: 1px solid #000000;
+}
+
+.disabled {
+    color: rgba(0, 0, 0, 0.1);
+}
+
+.pressed {
+    border: 3px solid #000000;
+}
+
+#app_title {
+    grid-area: title;
+    color: #ffffff;
+    background-color: #0000bf;
+    font-weight: bold;
+}
+#app_input {
+    grid-area: input;
+    color: #000000;
+    background-color: #ffffff;
+}
+#app_0 {
+    grid-area: _0;
+}
+#app_1 {
+    grid-area: _1;
+}
+#app_2 {
+    grid-area: _2;
+}
+#app_3 {
+    grid-area: _3;
+}
+#app_4 {
+    grid-area: _4;
+}
+#app_5 {
+    grid-area: _5;
+}
+#app_6 {
+    grid-area: _6;
+}
+#app_7 {
+    grid-area: _7;
+}
+#app_8 {
+    grid-area: _8;
+}
+#app_9 {
+    grid-area: _9;
+}
+#app_minus {
+    grid-area: minus;
+}
+#app_plus {
+    grid-area: plus;
+}
+#app_backspace {
+    background-color: #a0a0ff;
+    grid-area: backspace;
+}
+#app_D {
+    grid-area: D;
+}
+#app_enter {
+    background-color: #a0a0ff;
+    grid-area: enter;
+}
+#app_settings {
+    background-color: #e0e0e0;
+    grid-area: settings;
+}
+#app_results {
+    grid-area: results;
+}
+
+.unset {
+    color: rgba(0, 0, 0, 0.1);
+}
+
+.unset_var {
+    color: rgba(0, 0, 0, 0.1);
+    font-style: italic;
+}
