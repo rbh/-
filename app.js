@@ -9,14 +9,16 @@ function resize_handler() {
     var H = document.documentElement.clientHeight;
     var M;
     if (W < H) {
-	document.body.className = 'portrait';
+	document.body.classList.remove('landscape');
+	document.body.classList.add('portrait');
 	if ( W/4 < H/10 ) {
 	    M = W/4;
 	} else {
 	    M = H/10;
 	}
     } else {
-	document.body.className = 'landscape';
+	document.body.classList.remove('portrait');
+	document.body.classList.add('landscape');
 	if ( W/8 < H/6 ) {
 	    M = W/8;
 	} else {
@@ -33,24 +35,27 @@ function settings() {
     // Todo...
 }
 
+// Compute the probability of reusing the random number.
+function time_to_p(t) {
+    if (t < 150) {  // Short clicks will give independent rolls.
+	return 0;
+    } else {
+	var x = (t-1000)/200;
+	return 1/(1+Math.exp(-x));
+    }
+}
 
 // Roll dice.
 var last_random = Math.random();
 function roll(x, y, z, t) {
-    if (z >= 0) {
-	console.log(x + 'D' + y + '+' + z + '@' + t);
-    } else {
-	console.log(x + 'D' + y + '' +  z + '@' + t);
-    }
     if (t <= 0) {
 	t = 1;
     }
-    reuse_prob = 1/(1+Math.pow(t/500, 1/Math.log(2)));
-    console.log(reuse_prob);
+    var p = time_to_p(t);
     var rolls = [];
     var total = z;
     for (var i=0; i<x; i++) {    
-	if (Math.random() < reuse_prob) {
+	if (Math.random() < p) {
 	    random = last_random;
 	} else {
 	    random = Math.random();
@@ -74,6 +79,7 @@ var input_y = document.getElementById('input_y');
 var input_plus_minus = document.getElementById('input_plus_minus');
 var input_z = document.getElementById('input_z');
 var output = document.getElementById('app_results');
+var title = document.getElementById('app_title');
 
 var last_key = '';
 var last_key_ts = 0;
@@ -95,6 +101,7 @@ var key_elements = {
     'Backspace': document.getElementById('app_backspace'),
     's': document.getElementById('app_settings')
 };
+var timer = 0;
 
 // Remove last character from an element, and default to template if
 // all characters have been removed.
@@ -190,10 +197,11 @@ function press(key, t) {
 	    }
 	}
 	result = roll(x, y, z, t);
-	if (output.innerHTML) {
-	    output.innerHTML += '<br/>';
+	if (x > 1) {
+	    output.innerHTML = '<span>' + result['rolls'].join('+&#8203;') + '</span><span style=\'font-size: 200%\'>=' + result['total'] + '</span>';
+	} else {
+	    output.innerHTML = '<span style=\'font-size: 200%\'>' + result['total'] + '</span>';
 	}
-	output.innerHTML += result['rolls'].join('+') + '=' + result['total'];
     } else {  // key must be a number
 	if (input_D.classList.contains('unset')) {
 	    append(input_x, key);
@@ -209,11 +217,22 @@ function press(key, t) {
     }
 }
 
+// Update the progress bar when the Enter key is pressed.
+function progress() {
+    var pct = Math.floor(100*time_to_p(Date.now() - last_key_ts));
+    title.style = 'background: linear-gradient(to right, #0000ff, #0000ff ' + pct + '%, #0000bf ' + pct + '%, #0000bf 100%);';
+}
+
 // Handle when a a key is pressed down.
 function down(key) {
     if (last_key) {
 	if (key == last_key) {
 	    return;
+	}
+	if (timer) {
+	    clearInterval(timer);
+	    timer = 0;
+	    title.style = '';
 	}
 	key_elements[last_key].classList.remove('pressed');
     }
@@ -221,6 +240,9 @@ function down(key) {
 	key_elements[key].classList.add('pressed');
 	last_key = key;
 	last_key_ts = Date.now();
+	if (key == 'Enter') {
+	    timer = setInterval(progress, 10);
+	}
     } else {
 	last_key = '';
     }
@@ -230,6 +252,11 @@ function down(key) {
 function up(key) {
     if (last_key) {
 	key_elements[last_key].classList.remove('pressed');
+	if (timer) {
+	    clearInterval(timer);
+	    timer = 0;
+	    title.style = '';
+	}
     }
     if (last_key == key && ! key_elements[key].classList.contains('disabled')) {
 	press(key, Date.now() - last_key_ts);
