@@ -1,5 +1,5 @@
 // Files to cache
-var cacheName = '𝔻-3';
+var cacheName = '𝔻-4';
 var appShellFiles = [ './',
 		      'index.html',
 		      'app.js',
