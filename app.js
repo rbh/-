@@ -1,6 +1,10 @@
 // Registering service worker.
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+        //console.log('Service worker successfully registered on scope', registration.scope);
+    }).catch(function(error) {
+        console.log('Service worker failed to register');
+    });
 };
 
 // Make the app responsive.
