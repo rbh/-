@@ -89,8 +89,8 @@
             "type": "image/png"
         }
     ],
-    "start_url": "/𝔻/index.html",
-    "display": "fullscreen",
+    "start_url": "/D/index.html",
+    "display": "standalone",
     "theme_color": "#000000",
     "background_color": "#000000"
 }
