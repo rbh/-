@@ -272,15 +272,23 @@ function up(key) {
 document.addEventListener('keydown', function(event) { down(event.key); });
 document.addEventListener('keyup', function(event) { up(event.key); });
 
-// Install event handlers for pointing device.
-function makeDownHandler(key) {
+// Install event handlers for pointing and touch device.
+function makeMouseDownHandler(key) {
     return function(event) { down(key); };
 }
-function makeUpHandler(key) {
+function makeMouseUpHandler(key) {
     return function(event) { up(key); };
+}
+function makeTouchStartHandler(key) {
+    return function(event) { down(key); event.preventDefault(); };
+}
+function makeTouchEndHandler(key) {
+    return function(event) { up(key); event.preventDefault(); };
 }
 for (var key in key_elements) {
     element = key_elements[key];
-    element.addEventListener("mousedown", makeDownHandler(key));
-    element.addEventListener("mouseup", makeUpHandler(key));
+    element.addEventListener("mousedown", makeMouseDownHandler(key));
+    element.addEventListener("mouseup", makeMouseUpHandler(key));
+    element.addEventListener("touchstart", makeTouchStartHandler(key));
+    element.addEventListener("touchend", makeTouchEndHandler(key));
 }
